@@ -17,11 +17,11 @@ int main()
 
 			if (select == 1)
 			{
-				//display available books and allow user to add books to cart
+				//display available books in inventory.csv and allow user to add books to cart.csv
 			}
 			else if (select == 2)
 			{
-				//display books in user's cart and allows user to remove items or checkout
+				//display books in cart.csv and allows user to remove items or checkout
 			}
 			else if (select == 3)
 			{
