@@ -114,6 +114,8 @@ void inventorySelection() {
 }
 
 void cartSelection() {
+	int newSelection;
+	cout << "What would you like to do?\n\n";
 
 }
 
