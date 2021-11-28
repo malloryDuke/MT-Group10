@@ -1,4 +1,6 @@
 #pragma once
+#ifndef Cart_H
+
 #define Cart_H
 #include <string>
 #include <iostream>
@@ -6,19 +8,13 @@ using std::string;
 
 class Cart
 {
+	string book;
+	int num;
 public:
-	Cart();
-	void addItem(Book book, int num);
-	void removeItem(Book book);
+	void addItem(string book, int num);
+	void removeItem(string book);
 	string viewCartItems();
 	void checkout();
-
-private:
-	Book book;
-	int num;
 };
-
-Cart::Cart()
-{
-}
+#endif // !Cart_H
 

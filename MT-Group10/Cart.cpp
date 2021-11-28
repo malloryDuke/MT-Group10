@@ -2,20 +2,16 @@
 #include <iostream>
 #include <stdlib.h>
 
-Cart::Cart() {
+void Cart::addItem(string book, int num) {
 
 }
 
-void Cart::addItem(Book book, int num) {
-
-}
-
-void Cart::removeItem(Book book) {
+void Cart::removeItem(string book) {
 
 }
 
 string Cart::viewCartItems() {
-
+	return "this";
 }
 
 void Cart::checkout() {

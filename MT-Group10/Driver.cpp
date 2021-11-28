@@ -119,10 +119,10 @@ void cartSelection() {
 	int newSelection;
 	bool validSel;
 	cout << "What would you like to do?\n\n";
-	cout << " 1. View Items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
+	cout << " 1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
 	cin >> newSelection;
-	Cart cart = Cart();
-	while ((newSelection < 4)and(newSelection != 0))
+	Cart cart;
+	while ((newSelection < 4)&&(newSelection != 0))
 	{
 		if (newSelection == 1)
 		{
@@ -133,7 +133,7 @@ void cartSelection() {
 		else if (newSelection == 2) {
 			string items = cart.viewCartItems();
 			cout << "Your current items are: " << items << "\n";
-			int bookNum;
+			string bookNum;
 			cout << "What is the number of the book you wish to remove? ";
 			cin >> bookNum;
 			cart.removeItem(bookNum); //need to make the book class
