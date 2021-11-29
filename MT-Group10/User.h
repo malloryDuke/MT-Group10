@@ -94,7 +94,7 @@ void User::removeUser(string uname){
     //Remove the old file 
     remove("accountInfo.csv");
     //Rename the new file
-    rename("newaccoutInfo.csv", "accountInfo.csv");
+    rename("newaccountInfo.csv", "accountInfo.csv");
 
 }
 
