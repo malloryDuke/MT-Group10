@@ -22,7 +22,7 @@ int main()
 			{
 				cout << "\nWhere would you like to go?\n\n";
 				cout << "1. Inventory\n2. Shopping Cart\n3. Account\n4. Logout & Exit\n";
-				cin >> input;
+				getline(cin, input);
 				select = stoi(input);
 
 				if (select == 1)
@@ -68,14 +68,15 @@ int main()
 				string password;
 				string addr;
 				string payInfo;
-				cin >> select;
+				getline(cin, input);
+				select = stoi(input);
 				switch(select){
 					case 1: //Login
 						//ask for username and password and checks user.csv for a match
 						cout << "Enter Username: ";
-						cin >> name;
+						getline(cin, name);
 						cout << "Enter Password: ";
-						cin >> password;
+						getline(cin, password);
 						login = curUser->login(name, password);
 						validSelection = true;
 						if(login)
@@ -85,16 +86,19 @@ int main()
 						break;
 
 					case 2: //Create Account
+					{
 						//asks for user information and adds to user.csv
 						cout << "Enter a Username: ";
-						cin >> name;
+						getline(cin, name);
 						cout << "Enter a password: ";
-						cin >> password;
+						getline(cin, password);
 						cout << "Enter your address: ";
-						cin >> addr;
-						cout << "Enter your payment information: ";
-						cin >> payInfo;
+						getline(cin, addr);
+						cout << "Enter your card number: ";
+						getline(cin, payInfo);
 
+						
+						
 						//Debugging nonsense
 						cout << "Entered information: " << name << endl << password << endl << addr << endl << payInfo << endl;
 						
@@ -104,6 +108,7 @@ int main()
 						validSelection = true;
 						cout << "\nSuccessfully created account! ";
 						break;
+					}
 					case 3: //Exit
 						//exit program
 						validSelection = true;
@@ -149,7 +154,7 @@ void accountSelection(User* curUser) {
 	while(true){
 		cout << "Enter your section\n"
 			<< "1: View Order History\n2: Edit Shipping Information\n3: Edit Payment Informtion\n4: Delete Account\n5: Go Back\n";
-		cin >>  input;
+		getline(cin, input);
 		select = stoi(input);
 		vector<string>  orderHistory;
 		string newAddr;
@@ -165,12 +170,12 @@ void accountSelection(User* curUser) {
 				break;
 			case 2: //Edit Shippping Info
 				cout << "Enter new Shipping Address: ";
-				cin >> newAddr;
+				getline(cin, newAddr);
 				curUser->editShippingInfo(newAddr);
 				break;
 			case 3: //Edit Payment Info
 				cout << "Enter new Payment Information: ";
-				cin >> newPay;
+				getline(cin, newPay);
 				curUser->editPayInfo(newPay);
 				break;
 			case 4: //Delete Account
