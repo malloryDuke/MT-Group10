@@ -1,8 +1,10 @@
 #include <iostream>
-#include "Cart.cpp"
+#include "Cart.h"
 #include <stdlib.h>
+#include <fstream>
 
 using namespace std;
+void createCSVFiles();
 void inventorySelection();
 void cartSelection();
 void accountSelection();
@@ -11,6 +13,7 @@ int main()
 {
 	bool login = false;
 	int select;
+	createCSVFiles();
 	while (true)//loops until user exits
 	{
 		//checks boolean value to determine which menu to display
@@ -95,6 +98,26 @@ int main()
 	}
 }
 
+void createCSVFiles() {
+	// Source: https://www.geeksforgeeks.org/csv-file-management-using-c/
+	fstream foutCart;
+	fstream foutInventory;
+	fstream foutUsers;
+	foutCart.open("cart.csv", ios::out | ios::app);
+	foutInventory.open("inventory.csv", ios::out | ios::app);
+	foutUsers.open("users.csv", ios::out | ios::app);
+
+	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
+
+	foutUsers << "mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
+
+	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
+
+	foutCart.close();
+	foutInventory.close();
+	foutUsers.close();
+}
+
 void inventorySelection() {
 	int newSelection;
 	cout << "What would you like to do?\n\n";
@@ -117,12 +140,12 @@ void inventorySelection() {
 
 void cartSelection() {
 	int newSelection;
-	bool validSel;
+	bool validSel = false;
 	cout << "What would you like to do?\n\n";
-	cout << " 1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
+	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
 	cin >> newSelection;
 	Cart cart;
-	while ((newSelection < 4)&&(newSelection != 0))
+	while (!validSel)
 	{
 		if (newSelection == 1)
 		{
@@ -142,16 +165,18 @@ void cartSelection() {
 		else if (newSelection == 3)
 		{
 			cart.checkout();
+			cout << "Your items have been checked out!\n";
 			validSel = true;
 		}
+		else if (newSelection == 4) {
+			cout << "Headed back to main menu!\n";
+			validSel = true;
+		}
+		else {
+			validSel = false;
+			cout << "Invalid Selection - Try again!\n";
+		}
 	}
-	/*else if (newSelection == 4) {
-		// Find a way to go back to main menu
-		validSel = false;
-	}
-	else {
-		validSel = false;
-	}*/
 }
 
 void accountSelection() {
