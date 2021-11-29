@@ -23,7 +23,7 @@ string Cart::addItem(string book, int num) {
 	vector<string> row;
 	string items = "";
 	string temp;
-	int count = 0;
+	int count = 1;
 	string message = "Book added to cart!";
 	string isbn;
 	bool add = false;
@@ -48,9 +48,7 @@ string Cart::addItem(string book, int num) {
 		if (book == title)
 		{
 			isbn = row[0];
-			cout << isbn;
 			string inStock = row[3];
-			cout << inStock;
 			bool canAdd = num <= std::stoi(inStock);
 			if (!canAdd)
 			{
@@ -64,7 +62,16 @@ string Cart::addItem(string book, int num) {
 			message = "We do not offer this book. If you believe we do, check your spelling and casing and try again";
 		}
 	}
-	foutCart << "4, " + isbn + ", " + book + ", " + std::to_string(num) + "\n";
+	string temp2;
+	vector<string> row2;
+	string line2;
+	while (finCart >> temp2)
+	{
+		row2.clear();
+		getline(finCart, line2);
+		count += 1;
+	}
+	foutCart << std::to_string(count) + ", " + isbn + ", " + book + ", " + std::to_string(num) + "\n";
 	fInventory.close();
 	foutCart.close();
 	return message;
