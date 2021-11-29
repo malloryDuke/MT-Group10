@@ -5,8 +5,8 @@
 
 using namespace std;
 void createCSVFiles();
-void inventorySelection();
-void cartSelection();
+void inventorySelection(Cart cart);
+void cartSelection(Cart cart);
 void accountSelection();
 
 int main()
@@ -20,6 +20,7 @@ int main()
 		if (login)
 		{
 			bool validSelection = false;
+			Cart cart;
 			while (!validSelection)
 			{
 				cout << "\nWhere would you like to go?\n\n";
@@ -30,13 +31,13 @@ int main()
 				{
 					//display available books in inventory.csv and allow user to add books to cart.csv
 					validSelection = true;
-					inventorySelection();
+					inventorySelection(cart);
 				}
 				else if (select == 2)
 				{
 					//display books in cart.csv and allows user to remove items or checkout
 					validSelection = true;
-					cartSelection();
+					cartSelection(cart);
 				}
 				else if (select == 3)
 				{
@@ -108,8 +109,9 @@ void createCSVFiles() {
 	foutUsers.open("users.csv", ios::out | ios::app);
 
 	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
+	foutCart << "2, 5000029999992, Bible, 3,\n";
 
-	foutUsers << "mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
+	foutUsers << "1, mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
 
 	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
 
@@ -118,7 +120,7 @@ void createCSVFiles() {
 	foutUsers.close();
 }
 
-void inventorySelection() {
+void inventorySelection(Cart cart) {
 	int newSelection;
 	cout << "What would you like to do?\n\n";
 	cout << "1. Add book to cart\n2. Go back to main menu\n";
@@ -127,7 +129,12 @@ void inventorySelection() {
 	{
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
-		cin >> book;
+		std::getline(std::cin >> std::ws, book);
+		int num;
+		cout << "How many of " + book + " would you like to add to your cart?\n";
+		cin >> num;
+		string message = cart.addItem(book, num);
+		cout << message;
 		// call instance of cart to add the book to it
 	}
 	else if (newSelection == 2) {
@@ -138,28 +145,27 @@ void inventorySelection() {
 	}
 }
 
-void cartSelection() {
+void cartSelection(Cart cart) {
 	int newSelection;
 	bool validSel = false;
 	cout << "What would you like to do?\n\n";
 	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
 	cin >> newSelection;
-	Cart cart;
 	while (!validSel)
 	{
 		if (newSelection == 1)
 		{
 			string items = cart.viewCartItems();
-			cout << "Your current items are: " << items << "\n";
+			cout << "Your current items are:\n" << items << "\n";
 			validSel = true;
 		}
 		else if (newSelection == 2) {
 			string items = cart.viewCartItems();
-			cout << "Your current items are: " << items << "\n";
-			string bookNum;
-			cout << "What is the number of the book you wish to remove? ";
-			cin >> bookNum;
-			cart.removeItem(bookNum); //need to make the book class
+			cout << "Your current items are:\n" << items << "\n";
+			string name;
+			cout << "What is the title of the book you wish to remove? ";
+			cin >> name;
+			cart.removeItem(name); //need to make the book class
 			validSel = true;
 		}
 		else if (newSelection == 3)

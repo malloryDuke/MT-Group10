@@ -11,7 +11,7 @@ private:
 	int num;
 public:
 	Cart();
-	void addItem(string book, int num);
+	string addItem(string book, int num);
 	void removeItem(string book);
 	string viewCartItems();
 	void checkout();
