@@ -166,10 +166,8 @@ void User::editShippingInfo(string newAddress){
         }
         if(!usercsv.eof()){
             //Write to new file
-            for (int i = 0; i < (input.size() -1); i++)
-            newout << input[i] << ",";
+            newout << input[0] << "," << input[1] << "," << input[2] << "," << input[3] << "\n";
         }
-        newout << input[input.size()-1] << "\n";
     }
 
     //Close the files
@@ -180,8 +178,7 @@ void User::editShippingInfo(string newAddress){
     remove("accountInfo.csv");
     //Rename the new file
     int test = rename("newaccountInfo.csv", "accountInfo.csv");
-    if (test == 0) cout << "Rename success\n";
-    else {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
+    if (test != 0) {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
 }
 
 //Update the payment info
@@ -207,8 +204,9 @@ void User::editPayInfo(string newPay){
         while(getline(s,word,',')){
             input.push_back(word);
         }
-        getline(s,word,'\n');
-        input.push_back(word);
+        
+        //getline(s,word,'\n');
+        //input.push_back(word);
 
         if(input[0] == username){
             //insert new address
@@ -216,13 +214,8 @@ void User::editPayInfo(string newPay){
         }
         if(!usercsv.eof()){
             //Write to new file
-            for (int i = 0; i < (input.size() -1); i++){
-                newout << input[i] << ",";
-                cout << input[i] << ",";
-            }
+            newout << input[0] << "," << input[1] << "," << input[2] << "," << input[3] << "\n";
         }
-        newout << "\n";
-        cout <<endl;
     }
 
     //Close the files
@@ -233,8 +226,7 @@ void User::editPayInfo(string newPay){
     remove("accountInfo.csv");
     //Rename the new file
     int test = rename("newaccountInfo.csv", "accountInfo.csv");
-    if (test == 0) cout << "Rename success\n";
-    else {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
+    if (test != 0) {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
 }
 
 //void User::addOrder(){
