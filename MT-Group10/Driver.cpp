@@ -1,9 +1,13 @@
 #include <iostream>
+#include "Cart.h"
+#include <stdlib.h>
+#include <fstream>
 #include "User.h"
 
 using namespace std;
-void inventorySelection();
-void cartSelection();
+void createCSVFiles();
+void inventorySelection(Cart cart);
+void cartSelection(Cart cart);
 void accountSelection(User* curUser);
 
 int main()
@@ -12,12 +16,14 @@ int main()
 	string input;
 	int select;
 	User* curUser = new User;
+	createCSVFiles();
 	while (true)//loops until user exits
 	{
 		//checks boolean value to determine which menu to display
 		if (login)
 		{
 			bool validSelection = false;
+			Cart cart;
 			while (!validSelection)
 			{
 				cout << "\nWhere would you like to go?\n\n";
@@ -29,13 +35,13 @@ int main()
 				{
 					//display available books in inventory.csv and allow user to add books to cart.csv
 					validSelection = true;
-					inventorySelection();
+					inventorySelection(cart);
 				}
 				else if (select == 2)
 				{
 					//display books in cart.csv and allows user to remove items or checkout
 					validSelection = true;
-					cartSelection();
+					cartSelection(cart);
 				}
 				else if (select == 3)
 				{
@@ -123,7 +129,28 @@ int main()
 	}
 }
 
-void inventorySelection() {
+void createCSVFiles() {
+	// Source: https://www.geeksforgeeks.org/csv-file-management-using-c/
+	fstream foutCart;
+	fstream foutInventory;
+	fstream foutUsers;
+	foutCart.open("cart.csv", ios::out | ios::app);
+	foutInventory.open("inventory.csv", ios::out | ios::app);
+	foutUsers.open("users.csv", ios::out | ios::app);
+
+	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
+	foutCart << "2, 5000029999992, Bible, 3,\n";
+
+	foutUsers << "1, mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
+
+	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
+
+	foutCart.close();
+	foutInventory.close();
+	foutUsers.close();
+}
+
+void inventorySelection(Cart cart) {
 	int newSelection;
 	cout << "What would you like to do?\n\n";
 	cout << "1. Add book to cart\n2. Go back to main menu\n";
@@ -132,7 +159,12 @@ void inventorySelection() {
 	{
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
-		cin >> book;
+		std::getline(std::cin >> std::ws, book);
+		int num;
+		cout << "How many of " + book + " would you like to add to your cart?\n";
+		cin >> num;
+		string message = cart.addItem(book, num);
+		cout << message;
 		// call instance of cart to add the book to it
 	}
 	else if (newSelection == 2) {
@@ -143,8 +175,44 @@ void inventorySelection() {
 	}
 }
 
-void cartSelection() {
-
+void cartSelection(Cart cart) {
+	int newSelection;
+	bool validSel = false;
+	cout << "What would you like to do?\n\n";
+	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
+	cin >> newSelection;
+	while (!validSel)
+	{
+		if (newSelection == 1)
+		{
+			string items = cart.viewCartItems();
+			cout << "Your current items are:\n" << items << "\n";
+			validSel = true;
+		}
+		else if (newSelection == 2) {
+			string items = cart.viewCartItems();
+			cout << "Your current items are:\n" << items << "\n";
+			string name;
+			cout << "What is the title of the book you wish to remove? ";
+			cin >> name;
+			cart.removeItem(name); //need to make the book class
+			validSel = true;
+		}
+		else if (newSelection == 3)
+		{
+			cart.checkout();
+			cout << "Your items have been checked out!\n";
+			validSel = true;
+		}
+		else if (newSelection == 4) {
+			cout << "Headed back to main menu!\n";
+			validSel = true;
+		}
+		else {
+			validSel = false;
+			cout << "Invalid Selection - Try again!\n";
+		}
+	}
 }
 
 void accountSelection(User* curUser) {
