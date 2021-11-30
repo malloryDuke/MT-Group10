@@ -2,6 +2,7 @@
 #define Cart_h
 #include <string>
 #include <iostream>
+#include "User.h"
 using std::string;
 
 class Cart
@@ -12,8 +13,8 @@ private:
 public:
 	Cart();
 	string addItem(string book, int num);
-	void removeItem(string book);
+	string removeItem(string book);
 	string viewCartItems();
-	void checkout();
+	string checkout(User* curUser);
 };
 

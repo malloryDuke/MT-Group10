@@ -7,7 +7,7 @@
 using namespace std;
 void createCSVFiles();
 void inventorySelection(Cart cart);
-void cartSelection(Cart cart);
+void cartSelection(Cart cart, User* curUser);
 void accountSelection(User* curUser);
 
 int main()
@@ -28,8 +28,7 @@ int main()
 			{
 				cout << "\nWhere would you like to go?\n\n";
 				cout << "1. Inventory\n2. Shopping Cart\n3. Account\n4. Logout & Exit\n";
-				getline(cin, input);
-				select = stoi(input);
+				cin >> select;
 
 				if (select == 1)
 				{
@@ -41,7 +40,7 @@ int main()
 				{
 					//display books in cart.csv and allows user to remove items or checkout
 					validSelection = true;
-					cartSelection(cart);
+					cartSelection(cart, curUser);
 				}
 				else if (select == 3)
 				{
@@ -70,58 +69,37 @@ int main()
 			{
 				cout << "Welcome to the book store! Please login to continue.\n\n";
 				cout << "1. Login\n2. Create Account\n3. Exit\n";
+				cin >> select;
 				string name;
 				string password;
 				string addr;
 				string payInfo;
-				getline(cin, input);
-				select = stoi(input);
-				switch(select){
-					case 1: //Login
-						//ask for username and password and checks user.csv for a match
-						cout << "Enter Username: ";
-						getline(cin, name);
-						cout << "Enter Password: ";
-						getline(cin, password);
-						login = curUser->login(name, password);
-						validSelection = true;
-						if(login)
-							cout << "\nLogin successful! ";
-						else
-							cout << "\nLogin Unsecessful Please try again\n";
-						break;
+				if (select == 1)
+				{
+					//ask for username and password and checks user.csv for a match
+					login = true;
+					validSelection = true;
+					cout << "\nLogin successful! ";
+				}
 
-					case 2: //Create Account
-					{
-						//asks for user information and adds to user.csv
-						cout << "Enter a Username: ";
-						getline(cin, name);
-						cout << "Enter a password: ";
-						getline(cin, password);
-						cout << "Enter your address: ";
-						getline(cin, addr);
-						cout << "Enter your card number: ";
-						getline(cin, payInfo);
+				else if (select == 2)
+				{
+					//asks for user information and adds to user.csv
+					login = true;
+					validSelection = true;
+					cout << "\nSuccessfully created account! ";
+				}
 
-						
-						
-						//Debugging nonsense
-						cout << "Entered information: " << name << endl << password << endl << addr << endl << payInfo << endl;
-						
-						//create the account
-						curUser->createUser(name,password,addr,payInfo); 
-						login = true;
-						validSelection = true;
-						cout << "\nSuccessfully created account! ";
-						break;
-					}
-					case 3: //Exit
-						//exit program
-						validSelection = true;
-						return 0;
-					default:
-						validSelection = false;
-						cout << "\nInvalid selection. Please try again.\n\n";
+				else if (select == 3)
+				{
+					//exit program
+					validSelection = true;
+					return 0;
+				}
+				else
+				{
+					validSelection = false;
+					cout << "\nInvalid selection. Please try again.\n\n";
 				}
 			}
 		}
@@ -174,7 +152,7 @@ void inventorySelection(Cart cart) {
 	}
 }
 
-void cartSelection(Cart cart) {
+void cartSelection(Cart cart, User* curUser) {
 	int newSelection;
 	bool validSel = false;
 	cout << "What would you like to do?\n\n";
@@ -192,15 +170,16 @@ void cartSelection(Cart cart) {
 			string items = cart.viewCartItems();
 			cout << "Your current items are:\n" << items << "\n";
 			string name;
-			cout << "What is the title of the book you wish to remove? ";
-			cin >> name;
-			cart.removeItem(name); //need to make the book class
+			cout << "What is the title of the book you wish to remove?\n";
+			std::getline(std::cin >> std::ws, name);
+			string message = cart.removeItem(name); //need to make the book class
+			cout << message;
 			validSel = true;
 		}
 		else if (newSelection == 3)
 		{
-			cart.checkout();
-			cout << "Your items have been checked out!\n";
+			string message = cart.checkout(curUser);
+			cout << message;
 			validSel = true;
 		}
 		else if (newSelection == 4) {
@@ -214,48 +193,6 @@ void cartSelection(Cart cart) {
 	}
 }
 
-void accountSelection(User* curUser) {
-	string input;
-	int select;
-	//Run until User selcts Go Back
-	while(true){
-		cout << "Enter your section\n"
-			<< "1: View Order History\n2: Edit Shipping Information\n3: Edit Payment Informtion\n4: Delete Account\n5: Go Back\n";
-		getline(cin, input);
-		select = stoi(input);
-		vector<string>  orderHistory;
-		string newAddr;
-		string newPay;
-		string deleteVerify;
-		switch (select)
-		{
-			case 1: //View Order History
-				orderHistory = curUser->viewOrderHistory();
-				for(int i = 0; i < orderHistory.size(); i++){
-					cout << "Order #" << i <<": " << orderHistory[i] << endl;
-				}
-				break;
-			case 2: //Edit Shippping Info
-				cout << "Enter new Shipping Address: ";
-				getline(cin, newAddr);
-				curUser->editShippingInfo(newAddr);
-				break;
-			case 3: //Edit Payment Info
-				cout << "Enter new Payment Information: ";
-				getline(cin, newPay);
-				curUser->editPayInfo(newPay);
-				break;
-			case 4: //Delete Account
-				cout << "Are you sure? (Y/n)";
-				cin >> deleteVerify;
-				if(deleteVerify == "Y" || deleteVerify == "y"){
-					cout << "Seg Fault \n";
-					curUser->removeUser(curUser->username);
-				}
-				break;
-			default:
-				return;
-		}
-	}
-	return;
+void accountSelection(User *curUser) {
+
 }
