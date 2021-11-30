@@ -133,17 +133,18 @@ void createCSVFiles() {
 	fstream foutCart;
 	fstream foutInventory;
 	fstream foutUsers;
+	fstream orderHistory; //Used to track order histories format should be username,order
 	foutCart.open("cart.csv", ios::out | ios::app);
 	foutInventory.open("inventory.csv", ios::out | ios::app);
 	foutUsers.open("users.csv", ios::out | ios::app);
-
+	/*
 	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
 	foutCart << "2, 5000029999992, Bible, 3,\n";
 
-	foutUsers << "1, mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
+	foutUsers << "mallory duke malloryd, paSSw0rd, 1000 something lane Starkville MS 39759, 1010101010101010-10/11-999\n";
 
 	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
-
+	*/
 	foutCart.close();
 	foutInventory.close();
 	foutUsers.close();
@@ -175,11 +176,13 @@ void inventorySelection(Cart cart) {
 }
 
 void cartSelection(Cart cart) {
+	string input;
 	int newSelection;
 	bool validSel = false;
 	cout << "What would you like to do?\n\n";
 	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
-	cin >> newSelection;
+	getline(cin, input);
+	newSelection = stoi(input);
 	while (!validSel)
 	{
 		if (newSelection == 1)
@@ -193,7 +196,7 @@ void cartSelection(Cart cart) {
 			cout << "Your current items are:\n" << items << "\n";
 			string name;
 			cout << "What is the title of the book you wish to remove? ";
-			cin >> name;
+			getline(cin, name);
 			cart.removeItem(name); //need to make the book class
 			validSel = true;
 		}
@@ -232,7 +235,7 @@ void accountSelection(User* curUser) {
 			case 1: //View Order History
 				orderHistory = curUser->viewOrderHistory();
 				for(int i = 0; i < orderHistory.size(); i++){
-					cout << "Order #" << i <<": " << orderHistory[i] << endl;
+					cout <<  orderHistory[i] << endl;
 				}
 				break;
 			case 2: //Edit Shippping Info
@@ -247,9 +250,8 @@ void accountSelection(User* curUser) {
 				break;
 			case 4: //Delete Account
 				cout << "Are you sure? (Y/n)";
-				cin >> deleteVerify;
+				getline(cin,deleteVerify);
 				if(deleteVerify == "Y" || deleteVerify == "y"){
-					cout << "Seg Fault \n";
 					curUser->removeUser(curUser->username);
 				}
 				break;
