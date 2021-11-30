@@ -76,53 +76,52 @@ int main()
 				string payInfo;
 				getline(cin, input);
 				select = stoi(input);
-				switch (select) {
-				case 1: //Login
-					//ask for username and password and checks user.csv for a match
-					cout << "Enter Username: ";
-					getline(cin, name);
-					cout << "Enter Password: ";
-					getline(cin, password);
-					login = curUser->login(name, password);
-					validSelection = true;
-					if (login)
-						cout << "\nLogin successful! ";
-					else
-						cout << "\nLogin Unsecessful Please try again\n";
-					break;
+				switch(select){
+					case 1: //Login
+						//ask for username and password and checks user.csv for a match
+						cout << "Enter Username: ";
+						getline(cin, name);
+						cout << "Enter Password: ";
+						getline(cin, password);
+						login = curUser->login(name, password);
+						validSelection = true;
+						if(login)
+							cout << "\nLogin successful! ";
+						else
+							cout << "\nLogin Unsecessful Please try again\n";
+						break;
 
-				case 2: //Create Account
-				{
-					//asks for user information and adds to user.csv
-					cout << "Enter a Username: ";
-					getline(cin, name);
-					cout << "Enter a password: ";
-					getline(cin, password);
-					cout << "Enter your address: ";
-					getline(cin, addr);
-					cout << "Enter your card number: ";
-					getline(cin, payInfo);
+					case 2: //Create Account
+					{
+						//asks for user information and adds to user.csv
+						cout << "Enter a Username: ";
+						getline(cin, name);
+						cout << "Enter a password: ";
+						getline(cin, password);
+						cout << "Enter your address: ";
+						getline(cin, addr);
+						cout << "Enter your card number: ";
+						getline(cin, payInfo);
 
-
-
-					//Debugging nonsense
-					cout << "Entered information: " << name << endl << password << endl << addr << endl << payInfo << endl;
-
-					//create the account
-					curUser->createUser(name, password, addr, payInfo);
-					login = true;
-					validSelection = true;
-					cout << "\nSuccessfully created account! ";
-					break;
-				}
-				case 3: //Exit
-					//exit program
-					validSelection = true;
-					return 0;
-				default:
-					validSelection = false;
-					cout << "\nInvalid selection. Please try again.\n\n";
-
+						
+						
+						//Debugging nonsense
+						cout << "Entered information: " << name << endl << password << endl << addr << endl << payInfo << endl;
+						
+						//create the account
+						curUser->createUser(name,password,addr,payInfo); 
+						login = true;
+						validSelection = true;
+						cout << "\nSuccessfully created account! ";
+						break;
+					}
+					case 3: //Exit
+						//exit program
+						validSelection = true;
+						return 0;
+					default:
+						validSelection = false;
+						cout << "\nInvalid selection. Please try again.\n\n";
 				}
 			}
 		}
@@ -219,7 +218,7 @@ void accountSelection(User* curUser) {
 	string input;
 	int select;
 	//Run until User selcts Go Back
-	while (true) {
+	while(true){
 		cout << "Enter your section\n"
 			<< "1: View Order History\n2: Edit Shipping Information\n3: Edit Payment Informtion\n4: Delete Account\n5: Go Back\n";
 		getline(cin, input);
@@ -230,32 +229,32 @@ void accountSelection(User* curUser) {
 		string deleteVerify;
 		switch (select)
 		{
-		case 1: //View Order History
-			orderHistory = curUser->viewOrderHistory();
-			for (int i = 0; i < orderHistory.size(); i++) {
-				cout << "Order #" << i << ": " << orderHistory[i] << endl;
-			}
-			break;
-		case 2: //Edit Shippping Info
-			cout << "Enter new Shipping Address: ";
-			getline(cin, newAddr);
-			curUser->editShippingInfo(newAddr);
-			break;
-		case 3: //Edit Payment Info
-			cout << "Enter new Payment Information: ";
-			getline(cin, newPay);
-			curUser->editPayInfo(newPay);
-			break;
-		case 4: //Delete Account
-			cout << "Are you sure? (Y/n)";
-			cin >> deleteVerify;
-			if (deleteVerify == "Y" || deleteVerify == "y") {
-				cout << "Seg Fault \n";
-				curUser->removeUser(curUser->username);
-			}
-			break;
-		default:
-			return;
+			case 1: //View Order History
+				orderHistory = curUser->viewOrderHistory();
+				for(int i = 0; i < orderHistory.size(); i++){
+					cout << "Order #" << i <<": " << orderHistory[i] << endl;
+				}
+				break;
+			case 2: //Edit Shippping Info
+				cout << "Enter new Shipping Address: ";
+				getline(cin, newAddr);
+				curUser->editShippingInfo(newAddr);
+				break;
+			case 3: //Edit Payment Info
+				cout << "Enter new Payment Information: ";
+				getline(cin, newPay);
+				curUser->editPayInfo(newPay);
+				break;
+			case 4: //Delete Account
+				cout << "Are you sure? (Y/n)";
+				cin >> deleteVerify;
+				if(deleteVerify == "Y" || deleteVerify == "y"){
+					cout << "Seg Fault \n";
+					curUser->removeUser(curUser->username);
+				}
+				break;
+			default:
+				return;
 		}
 	}
 	return;
