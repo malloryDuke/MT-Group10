@@ -1,6 +1,4 @@
 //Class for the User
-
-
 #ifndef USER_H
 #define USER_H
 //#include <cart.h>
@@ -27,7 +25,7 @@ public:
     void logout();
     void editShippingInfo(string newAddress);
     void editPayInfo(string newPay);
-    //void addOrder(Cart cartInfo);
+    void addOrder(string order);
     vector<string> viewOrderHistory();
     ~User();
 };
@@ -221,9 +219,13 @@ void User::editPayInfo(string newPay){
     if (test != 0) {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
 }
 
-//void User::addOrder(){
-
-//}
+void User::addOrder(string order){
+    //Open the orderHistory File
+    fstream orderHistory;
+    orderHistory.open("orderHistory.csv", ios::out | ios::app);
+    //Add the username followed by the order to the list
+    orderHistory << username << "," << order << "\n";
+}
 
 vector<string> User::viewOrderHistory(){
     fstream orderHistory;
@@ -235,28 +237,28 @@ vector<string> User::viewOrderHistory(){
     while(!orderHistory.eof())
     {
         input.clear();
-        char chtmp[4];
-        sprintf(chtmp, "%d:", count);
-        string tmp(chtmp);
-        returnVal.push_back(tmp);
-        getline(orderHistory,line);
-        stringstream s(line);
-
-        while(getline(s,word,',')){
-            input.push_back(word);
-        }
-
         if(input[0] == username){
-            for(int i = 1;i < input.size()-1;i++){
-                returnVal.push_back(input[i]);
-            }
-            string tmp2 = input[input.size()-1];
-            tmp2+= '\n';
-            returnVal.push_back(tmp2);
-        }
-        count++;
-    }
+            string tmp = "Order #";
+            tmp += to_string(count);
+            tmp += ": ";
+            returnVal.push_back(tmp);
+            tmp.clear();
+            getline(orderHistory,line);
+            stringstream s(line);
 
+            while(getline(s,word,',')){
+                input.push_back(word);
+            }
+
+                for(int i = 1; i < input.size(); i++)
+                {
+                    returnVal.push_back(input[i]);
+                }
+                returnVal.push_back(input[input.size() -1]);
+                returnVal.push_back("\n");
+                count++;
+            }
+    }
     return returnVal;
 }
 

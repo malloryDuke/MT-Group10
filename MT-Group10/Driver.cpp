@@ -2,12 +2,13 @@
 #include "Cart.h"
 #include <stdlib.h>
 #include <fstream>
+#include "Book.h"
 #include "User.h"
 
 using namespace std;
 void createCSVFiles();
 void inventorySelection(Cart cart);
-void cartSelection(Cart cart);
+void cartSelection(Cart cart, User* curUser);
 void accountSelection(User* curUser);
 
 int main()
@@ -41,7 +42,7 @@ int main()
 				{
 					//display books in cart.csv and allows user to remove items or checkout
 					validSelection = true;
-					cartSelection(cart);
+					cartSelection(cart, curUser);
 				}
 				else if (select == 3)
 				{
@@ -151,18 +152,22 @@ void createCSVFiles() {
 }
 
 void inventorySelection(Cart cart) {
+	string selctIn;
 	int newSelection;
 	cout << "What would you like to do?\n\n";
 	cout << "1. Add book to cart\n2. Go back to main menu\n";
-	cin >> newSelection;
+	getline(cin,selctIn);
+	newSelection = stoi(selctIn);
 	if (newSelection == 1)
 	{
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
 		std::getline(std::cin >> std::ws, book);
+		string numIn;
 		int num;
 		cout << "How many of " + book + " would you like to add to your cart?\n";
-		cin >> num;
+		getline(cin, numIn);
+		num = stoi(numIn);
 		string message = cart.addItem(book, num);
 		cout << message;
 		// call instance of cart to add the book to it
@@ -175,7 +180,7 @@ void inventorySelection(Cart cart) {
 	}
 }
 
-void cartSelection(Cart cart) {
+void cartSelection(Cart cart,User* curUser) {
 	string input;
 	int newSelection;
 	bool validSel = false;
@@ -202,7 +207,9 @@ void cartSelection(Cart cart) {
 		}
 		else if (newSelection == 3)
 		{
-			cart.checkout();
+			string order;
+			order = cart.checkout();
+			curUser->addOrder(order);
 			cout << "Your items have been checked out!\n";
 			validSel = true;
 		}
