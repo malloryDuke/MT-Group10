@@ -77,12 +77,8 @@ string Cart::addItem(string book, int num) {
 	return message;
 }
 
-void Cart::removeItem(string book) {
-	fstream fin, fout;
-	fin.open("cart.csv", ios::in);
-	fout.open("cart.csv", ios::out);
-	vector<string> row;
-
+string Cart::removeItem(string book) {
+	return "bluh";
 }
 
 string Cart::viewCartItems() {
@@ -109,7 +105,51 @@ string Cart::viewCartItems() {
 	return items;
 }
 
-void Cart::checkout() {
-
+string Cart::checkout() {
+	string message;
+	fstream finCart;
+	finCart.open("cart.csv", ios::in);
+	string temp;
+	vector<string> row;
+	string line;
+	int count = 0;
+	string items = "";
+	while (finCart >> temp) {
+		row.clear();
+		getline(finCart, line);
+		count += 1;
+	}
+	finCart.close();
+	fstream fin;
+	fin.open("cart.csv", ios::in);
+	int count2 = 0;
+	string temp2;
+	string line2;
+	vector<string> row2;
+	while (fin >> temp2)
+	{
+		row2.clear();
+		getline(fin, line2);
+		count2 += 1;
+		stringstream ss(line2);
+		string word2;
+		char split2 = ',';
+		while (getline(ss, word2, split2))
+		{
+			row2.push_back(word2);
+		}
+		if (count == count2)
+		{
+			items.append(row2[1]);
+		}
+		else {
+			items.append(row2[1] + ",");
+		}
+	}
+	items.append("\n");
+	fin.close();
+	message = std::to_string(count) + " items purchased: " + items;
+	cout << message << endl;
+	return message;
 }
 
