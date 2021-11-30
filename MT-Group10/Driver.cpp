@@ -122,7 +122,6 @@ int main()
 					default:
 						validSelection = false;
 						cout << "\nInvalid selection. Please try again.\n\n";
-					
 				}
 			}
 		}
