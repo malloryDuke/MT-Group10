@@ -78,7 +78,73 @@ string Cart::addItem(string book, int num) {
 }
 
 string Cart::removeItem(string book) {
-	return "bluh";
+	fstream fin, fout;
+	fin.open("cart.csv", ios::in);
+	fout.open("cartnew.csv", ios::out);
+	int index;
+	string line, word;
+	vector<string> row;
+	int count = 0;
+	string message;
+	string temp;
+	int lineCount = 0;
+	while (fin >> temp)
+	{
+		row.clear();
+		getline(fin, line);
+		lineCount += 1;
+		stringstream s(line);
+		char split = ',';
+		while (getline(s, word, split))
+		{
+			row.push_back(word);
+		}
+		int rowSize = row.size();
+
+		string whitespace = " \t";
+		const auto strBegin = row[1].find_first_not_of(whitespace);
+
+		const auto strEnd = row[1].find_last_not_of(whitespace);
+		const auto strRange = strEnd - strBegin + 1;
+		string title = row[1].substr(strBegin, strRange);
+
+		if (title == book)
+		{
+			lineCount = lineCount - 1;
+		}
+		if (title != book)
+		{
+			if (rowSize!=0 && (!fin.eof())) {
+				fout << lineCount << ",";
+				for (int i = 0; i < rowSize; ++i)
+				{
+					fout << row[i] << ",";
+				}
+				fout << "\n";
+			}
+		}
+		else {
+			count = 1;
+		}
+		if (fin.eof())
+		{
+			break;
+		}
+	}
+	if (count == 1)
+	{
+		message = "Book was removed from your cart!\n";
+	}
+	else
+	{
+		message = "Book was not found in your cart!\n";
+	}
+	fin.close();
+	fout.close();
+
+	remove("cart.csv");
+	rename("cartnew.csv", "cart.csv");
+	return message;
 }
 
 string Cart::viewCartItems() {
@@ -97,7 +163,7 @@ string Cart::viewCartItems() {
 		char split = ',';
 		while (getline(ss, word, split))
 		{
-			row.push_back(word + " ");
+			row.push_back(word);
 		}
 		items.append(row[1] + "\n");
 	}
@@ -148,7 +214,8 @@ string Cart::checkout() {
 	}
 	items.append("\n");
 	fin.close();
-	message = std::to_string(count) + " items purchased: " + items;
+	//message = std::to_string(count) + " items purchased: " + items;
+	message = "Items purchased: " + items;
 	return message;
 }
 
