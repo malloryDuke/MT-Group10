@@ -1,11 +1,11 @@
 #include "Inventory.h"
 
-void Inventory::addInventory(Book book, int stock)
+bool Inventory::addInventory(Book book, int stock)
 {
 
    fstream fin, fout;
-   fin.open("Inventory.csv", ios::in);
-   fout.open("Inventorynew.csv", ios::out);
+   fin.open("inventory.csv", ios::in);
+   fout.open("inventorynew.csv", ios::out);
    
    vector <string> row;
    int count;
@@ -75,12 +75,13 @@ void Inventory::addInventory(Book book, int stock)
    }
    if(count == 0)
    {  
-      cout << "Record Not Found" << endl;
+      return false;
    }
    fin.close();
    fout.close();
-   remove("Inventory.csv");
-   rename("Inventorynew.csv", "Inventory.csv"); 
+   remove("inventory.csv");
+   rename("inventorynew.csv", "inventory.csv"); 
+   return true;
 }
 
 bool Inventory::removeInventory(Book book, int stock)
@@ -159,7 +160,7 @@ bool Inventory::removeInventory(Book book, int stock)
    }
    if(count == 0)
    {
-      cout << "Record Not Found" << endl;
+      return false;
    }
    fin.close();
    fout.close();
@@ -177,8 +178,9 @@ bool Inventory::updateStock(int ISBN, int stock)
      addInventory(tmp, stock);
 }
 
-string Inventory::viewInventory()
-{
+void Inventory::viewInventory(ostream& os)
+{  
+   string output  = "";
    fstream fin;
    fin.open("Inventory.csv", ios::in);
    
@@ -200,14 +202,14 @@ string Inventory::viewInventory()
       int row_size = row.size();
       long int isbn = stoi(row[0]);
       
-      cout << num << ".";
+      os << num << ".";
       num++;
-      cout << "Title: " << row[2] << endl;
-      cout << "Author: " << row[1] << endl;
-      cout << "ISBN: " << row[0] << endl;
-      cout << "Price: " << row[4] << endl;
-      cout << "Stock: " << row[3] << endl;
-      cout << endl;
+      os <<"Title: " << row[2] << '\n';
+      os <<"Author: " << row[1] << '\n';
+      os << "ISBN: " << row[0] << '\n';
+      os << "Price: " << row[4] << '\n';
+      os << "Stock: " << row[3] << '\n';
+      os << '\n';
     
       if(fin.eof())
         break;

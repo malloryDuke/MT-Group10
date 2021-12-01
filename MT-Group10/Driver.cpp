@@ -153,6 +153,7 @@ void inventorySelection(Cart cart) {
 	if (newSelection == 1)
 	{
 		string book;
+		Cart.inventory(cout);
 		cout << "What is the title of the book you would like to add to the cart?\n";
 		std::getline(std::cin >> std::ws, book);
 		string numIn;
