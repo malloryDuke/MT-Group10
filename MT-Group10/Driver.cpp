@@ -113,7 +113,7 @@ void createCSVFiles() {
 	fstream foutInventory;
 	fstream foutUsers;
 	fstream orderHistory; //Used to track order histories format should be username,order
-	foutCart.open("cart.csv", ios::out | ios::app);
+	foutCart.open("cart.csv", std::ofstream::out | std::ofstream::trunc);
 	foutInventory.open("inventory.csv", ios::out | ios::app);
 	foutUsers.open("users.csv", ios::out | ios::app);
 	/*
@@ -130,12 +130,10 @@ void createCSVFiles() {
 }
 
 void inventorySelection(Cart cart) {
-	string selctIn;
 	int newSelection;
 	cout << "What would you like to do?\n\n";
 	cout << "1. Add book to cart\n2. Go back to main menu\n";
-	getline(cin,selctIn);
-	newSelection = stoi(selctIn);
+	cin >> newSelection;
 	if (newSelection == 1)
 	{
 		// Display contents of inventory.csv
@@ -160,19 +158,23 @@ void inventorySelection(Cart cart) {
 }
 
 void cartSelection(Cart cart,User* curUser) {
-	string input;
 	int newSelection;
 	bool validSel = false;
 	cout << "What would you like to do?\n\n";
 	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
-	getline(cin, input);
-	newSelection = stoi(input);
+	cin >> newSelection;
 	while (!validSel)
 	{
 		if (newSelection == 1)
 		{
 			string items = cart.viewCartItems();
-			cout << "Your current items are:\n" << items << "\n";
+			if (items.empty())
+			{
+				cout << "There are currently no items in your cart\n";
+			}
+			else {
+				cout << "Your current items are:\n" << items << "\n";
+			}
 			validSel = true;
 		}
 		else if (newSelection == 2) {
