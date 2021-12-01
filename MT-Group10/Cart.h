@@ -12,8 +12,8 @@ private:
 public:
 	Cart();
 	string addItem(string book, int num);
-	void removeItem(string book);
+	string removeItem(string book);
 	string viewCartItems();
-	void checkout();
+	string checkout();
 };
 

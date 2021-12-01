@@ -1,9 +1,7 @@
 //Class for the User
-
-
 #ifndef USER_H
 #define USER_H
-//#include <cart.h>
+//#include "Cart.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -20,27 +18,19 @@ public:
     string username;
     string address;
     
-    //User(string uname, string pass, string addr, string paymentInfo);
+   
     void createUser(string uname, string pass, string addr, string paymentInfo);
     void removeUser(string uname);
     bool login(string uname, string pass);
     void logout();
     void editShippingInfo(string newAddress);
     void editPayInfo(string newPay);
-    //void addOrder(Cart cartInfo);
+    void addOrder(string order);
     vector<string> viewOrderHistory();
     ~User();
 };
 
-/*Class Constructor
-User::User(string uname, string pass, string addr, string paymentInfo){
-    //Set Variables
-    username = uname;
-    password = pass;
-    address = addr;
-    payment = paymentInfo;
-}
-*/
+
 void User::createUser(string uname, string pass, string addr, string paymentInfo){
     //Set Variables
     username = uname;
@@ -49,7 +39,7 @@ void User::createUser(string uname, string pass, string addr, string paymentInfo
     payment = paymentInfo;
     fstream usercsv;
     //Open csv File
-    usercsv.open("accountInfo.csv", ios::out|ios::app);
+    usercsv.open("users.csv", ios::out|ios::app);
     //Write the new user to the csv file
     usercsv << uname << "," << pass << "," << addr << "," << paymentInfo << "\n";
 }
@@ -58,8 +48,8 @@ void User::removeUser(string uname){
     //create new file for update
     fstream newout, usercsv;
     //open both files
-    usercsv.open("accountInfo.csv", ios::in);
-    newout.open("newaccountInfo.csv", ios::out);
+    usercsv.open("users.csv", ios::in);
+    newout.open("newusers.csv", ios::out);
 
     string line,word;
     vector <string> input;
@@ -81,7 +71,7 @@ void User::removeUser(string uname){
                 //Write to new file
                 int test = input.size();
                 for (int i = 0; i < test -1; i++)
-                newout << input[i] << ", ";
+                newout << input[i] << ',';
             }
             newout << input[input.size()-1] << "\n";
         }
@@ -92,16 +82,16 @@ void User::removeUser(string uname){
     newout.close();
 
     //Remove the old file 
-    remove("accountInfo.csv");
+    remove("users.csv");
     //Rename the new file
-    rename("newaccountInfo.csv", "accountInfo.csv");
+    rename("newusers.csv", "users.csv");
 
 }
 
 bool User::login(string uname, string pass){
     fstream usercsv;
     //Read the username and password from the csv file
-    usercsv.open("accountInfo.csv", ios::in);
+    usercsv.open("users.csv", ios::in);
     string line, word;
     vector <string> input;
     while (!usercsv.eof()){
@@ -141,8 +131,8 @@ void User::editShippingInfo(string newAddress){
     //create new file for update
     fstream newout, usercsv;
     //open both files
-    usercsv.open("accountInfo.csv", ios::in);
-    newout.open("newaccountInfo.csv", ios::out);
+    usercsv.open("users.csv", ios::in);
+    newout.open("newusers.csv", ios::out);
 
     string line,word;
     vector <string> input;
@@ -175,9 +165,9 @@ void User::editShippingInfo(string newAddress){
     newout.close();
 
     //Remove the old file 
-    remove("accountInfo.csv");
+    remove("users.csv");
     //Rename the new file
-    int test = rename("newaccountInfo.csv", "accountInfo.csv");
+    int test = rename("newusers.csv", "users.csv");
     if (test != 0) {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
 }
 
@@ -186,8 +176,8 @@ void User::editPayInfo(string newPay){
     //create new file for update
     fstream newout, usercsv;
     //open both files
-    usercsv.open("accountInfo.csv", ios::in);
-    newout.open("newaccountInfo.csv", ios::out);
+    usercsv.open("users.csv", ios::in);
+    newout.open("newusers.csv", ios::out);
 
     string line,word;
     vector <string> input;
@@ -223,18 +213,64 @@ void User::editPayInfo(string newPay){
     newout.close();
 
     //Remove the old file 
-    remove("accountInfo.csv");
+    remove("users.csv");
     //Rename the new file
-    int test = rename("newaccountInfo.csv", "accountInfo.csv");
+    int test = rename("newusers.csv", "users.csv");
     if (test != 0) {cout << "Rename Failure\n"; perror("Reaname"); exit(EXIT_FAILURE);}
 }
 
-//void User::addOrder(){
+void User::addOrder(string order){
+    //Open the orderHistory File
+    fstream orderHistory;
+    orderHistory.open("orderHistory.csv", ios::out | ios::app);
+    //Add the username followed by the order to the list
+    stringstream s(order);
+    string word;
+    orderHistory << username << "," << order;
+    /*
+    while(getline(s, word,','))
+    {
+        orderHistory << word;
+        if(word[word.size()-1] != '\n')
+            orderHistory << ",";
+    }
+    orderHistory << "\n";
+    */
+}
 
-//}
 
 vector<string> User::viewOrderHistory(){
+    fstream orderHistory;
     vector<string> returnVal;
+    vector<string> input;
+    string line, word;
+    int count = 1;
+    orderHistory.open("orderHistory.csv", ios::in);
+    while(!orderHistory.eof())
+    {
+        input.clear();
+        getline(orderHistory,line);
+        stringstream s(line);
+        while(getline(s,word,',')){
+                input.push_back(word);
+            }
+        if(input[0] == username){
+            string tmp = "Order #";
+            tmp += to_string(count);
+            tmp += ": \n";
+            returnVal.push_back(tmp);
+            tmp.clear();
+            
+            for(int i = 1; i < input.size(); i++)
+                {
+                    returnVal.push_back(input[i]);
+                    if(i != (input.size() -1))
+                        returnVal.push_back(",");
+                }
+            returnVal.push_back("\n");
+            count++;
+            }
+    }
     return returnVal;
 }
 
