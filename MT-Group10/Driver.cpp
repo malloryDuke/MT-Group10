@@ -2,6 +2,7 @@
 #include "Cart.h"
 #include <stdlib.h>
 #include <fstream>
+#include "Book.h"
 #include "User.h"
 
 using namespace std;
@@ -111,36 +112,41 @@ void createCSVFiles() {
 	fstream foutCart;
 	fstream foutInventory;
 	fstream foutUsers;
+	fstream orderHistory; //Used to track order histories format should be username,order
 	foutCart.open("cart.csv", ios::out | ios::app);
 	foutInventory.open("inventory.csv", ios::out | ios::app);
 	foutUsers.open("users.csv", ios::out | ios::app);
-
+	/*
 	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
 	foutCart << "2, 5000029999992, Bible, 3,\n";
 
-	foutUsers << "1, mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
+	foutUsers << "mallory duke malloryd, paSSw0rd, 1000 something lane Starkville MS 39759, 1010101010101010-10/11-999\n";
 
 	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
-
+	*/
 	foutCart.close();
 	foutInventory.close();
 	foutUsers.close();
 }
 
 void inventorySelection(Cart cart) {
+	string selctIn;
 	int newSelection;
 	cout << "What would you like to do?\n\n";
 	cout << "1. Add book to cart\n2. Go back to main menu\n";
-	cin >> newSelection;
+	getline(cin,selctIn);
+	newSelection = stoi(selctIn);
 	if (newSelection == 1)
 	{
 		// Display contents of inventory.csv
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
 		std::getline(std::cin >> std::ws, book);
+		string numIn;
 		int num;
 		cout << "How many of " + book + " would you like to add to your cart?\n";
-		cin >> num;
+		getline(cin, numIn);
+		num = stoi(numIn);
 		string message = cart.addItem(book, num);
 		cout << message;
 		// call instance of cart to add the book to it
@@ -153,12 +159,14 @@ void inventorySelection(Cart cart) {
 	}
 }
 
-void cartSelection(Cart cart, User* curUser) {
+void cartSelection(Cart cart,User* curUser) {
+	string input;
 	int newSelection;
 	bool validSel = false;
 	cout << "What would you like to do?\n\n";
 	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
-	cin >> newSelection;
+	getline(cin, input);
+	newSelection = stoi(input);
 	while (!validSel)
 	{
 		if (newSelection == 1)
@@ -179,9 +187,10 @@ void cartSelection(Cart cart, User* curUser) {
 		}
 		else if (newSelection == 3)
 		{
-			string message = cart.checkout();
-			//curUser->addOrder(message);
-			cout << message;
+			string order;
+			order = cart.checkout();
+			curUser->addOrder(order);
+			cout << "Your items have been checked out!\n";
 			validSel = true;
 		}
 		else if (newSelection == 4) {
@@ -195,6 +204,51 @@ void cartSelection(Cart cart, User* curUser) {
 	}
 }
 
-void accountSelection(User *curUser) {
-
+void accountSelection(User* curUser) {
+	string input;
+	int select;
+	//Run until User selcts Go Back
+	while(true){
+		cout << "Enter your section\n"
+			<< "1: View Order History\n2: Edit Shipping Information\n3: Edit Payment Informtion\n4: Delete Account\n5: Go Back\n";
+		getline(cin, input);
+		select = stoi(input);
+		vector<string>  orderHistory;
+		string newAddr;
+		string newPay;
+		string deleteVerify;
+		switch (select)
+		{
+			case 1: //View Order History
+				
+				orderHistory = curUser->viewOrderHistory();
+				//cout << "Segfault" << endl;
+				cout << orderHistory[0] << endl;
+				for(int i = 1; i < (orderHistory.size() -1); i++){
+					cout <<  orderHistory[i];
+				}
+				cout << endl;
+				break;
+			case 2: //Edit Shippping Info
+				cout << "Enter new Shipping Address: ";
+				getline(cin, newAddr);
+				curUser->editShippingInfo(newAddr);
+				break;
+			case 3: //Edit Payment Info
+				cout << "Enter new Payment Information: ";
+				getline(cin, newPay);
+				curUser->editPayInfo(newPay);
+				break;
+			case 4: //Delete Account
+				cout << "Are you sure? (Y/n)";
+				getline(cin,deleteVerify);
+				if(deleteVerify == "Y" || deleteVerify == "y"){
+					curUser->removeUser(curUser->username);
+				}
+				break;
+			default:
+				return;
+		}
+	}
+	return;
 }
