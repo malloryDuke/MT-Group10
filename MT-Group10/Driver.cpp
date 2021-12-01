@@ -104,11 +104,6 @@ int main()
 						getline(cin, addr);
 						cout << "Enter your card number: ";
 						getline(cin, payInfo);
-
-						
-						
-						//Debugging nonsense
-						cout << "Entered information: " << name << endl << password << endl << addr << endl << payInfo << endl;
 						
 						//create the account
 						curUser->createUser(name,password,addr,payInfo); 
@@ -171,7 +166,7 @@ void inventorySelection(Cart cart) {
 		cout << message;
 		// call instance of cart to add the book to it
 	}
-	else if (newSelection == 2) {
+	else if (newSelection == 2)
 		return;
 	else {
 		cout << "Invalid selection";
