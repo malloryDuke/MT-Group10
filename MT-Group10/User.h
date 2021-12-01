@@ -224,8 +224,20 @@ void User::addOrder(string order){
     fstream orderHistory;
     orderHistory.open("orderHistory.csv", ios::out | ios::app);
     //Add the username followed by the order to the list
-    orderHistory << username << "," << order << "\n";
+    stringstream s(order);
+    string word;
+    orderHistory << username << "," << order;
+    /*
+    while(getline(s, word,','))
+    {
+        orderHistory << word;
+        if(word[word.size()-1] != '\n')
+            orderHistory << ",";
+    }
+    orderHistory << "\n";
+    */
 }
+
 
 vector<string> User::viewOrderHistory(){
     fstream orderHistory;
@@ -237,26 +249,27 @@ vector<string> User::viewOrderHistory(){
     while(!orderHistory.eof())
     {
         input.clear();
+        getline(orderHistory,line);
+        stringstream s(line);
+        while(getline(s,word,',')){
+                input.push_back(word);
+            }
         if(input[0] == username){
             string tmp = "Order #";
             tmp += to_string(count);
-            tmp += ": ";
+            tmp += ": \n";
             returnVal.push_back(tmp);
             tmp.clear();
-            getline(orderHistory,line);
-            stringstream s(line);
-
-            while(getline(s,word,',')){
-                input.push_back(word);
-            }
-
-                for(int i = 1; i < input.size(); i++)
+            
+            for(int i = 1; i < input.size(); i++)
                 {
                     returnVal.push_back(input[i]);
+                    if(i != (input.size() -1))
+                        returnVal.push_back(",");
                 }
-                returnVal.push_back(input[input.size() -1]);
-                returnVal.push_back("\n");
-                count++;
+                //returnVal.push_back(input[input.size() -1]);
+            returnVal.push_back("\n");
+            count++;
             }
     }
     return returnVal;

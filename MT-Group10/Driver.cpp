@@ -240,10 +240,14 @@ void accountSelection(User* curUser) {
 		switch (select)
 		{
 			case 1: //View Order History
+				
 				orderHistory = curUser->viewOrderHistory();
-				for(int i = 0; i < orderHistory.size(); i++){
-					cout <<  orderHistory[i] << endl;
+				//cout << "Segfault" << endl;
+				cout << orderHistory[0] << endl;
+				for(int i = 1; i < (orderHistory.size() -1); i++){
+					cout <<  orderHistory[i];
 				}
+				cout << endl;
 				break;
 			case 2: //Edit Shippping Info
 				cout << "Enter new Shipping Address: ";
