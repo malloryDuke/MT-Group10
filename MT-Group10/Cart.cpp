@@ -149,7 +149,6 @@ string Cart::checkout() {
 	items.append("\n");
 	fin.close();
 	message = std::to_string(count) + " items purchased: " + items;
-	cout << message << endl;
 	return message;
 }
 
