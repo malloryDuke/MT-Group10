@@ -105,7 +105,7 @@ string Cart::viewCartItems() {
 	return items;
 }
 
-string Cart::checkout(User* curUser) {
+string Cart::checkout() {
 	string message;
 	fstream finCart;
 	finCart.open("cart.csv", ios::in);
@@ -149,7 +149,6 @@ string Cart::checkout(User* curUser) {
 	items.append("\n");
 	fin.close();
 	message = std::to_string(count) + " items purchased: " + items;
-	// curUser->addOrder(message);
 	return message;
 }
 

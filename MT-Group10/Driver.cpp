@@ -134,6 +134,7 @@ void inventorySelection(Cart cart) {
 	cin >> newSelection;
 	if (newSelection == 1)
 	{
+		// Display contents of inventory.csv
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
 		std::getline(std::cin >> std::ws, book);
@@ -178,7 +179,8 @@ void cartSelection(Cart cart, User* curUser) {
 		}
 		else if (newSelection == 3)
 		{
-			string message = cart.checkout(curUser);
+			string message = cart.checkout();
+			//curUser->addOrder(message);
 			cout << message;
 			validSel = true;
 		}
