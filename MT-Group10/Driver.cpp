@@ -115,8 +115,8 @@ void createCSVFiles() {
 	foutInventory.open("inventory.csv", ios::out | ios::app);
 	foutUsers.open("users.csv", ios::out | ios::app);
 
-	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
-	foutCart << "2, 5000029999992, Bible, 3,\n";
+	//foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
+	//foutCart << "2, 5000029999992, Bible, 3,\n";
 
 	foutUsers << "1, mallory, duke, malloryd, paSSw0rd, 1010101010101010-10/11-999, 1000 something lane Starkville MS 39759, no orders,\n";
 
@@ -173,7 +173,7 @@ void cartSelection(Cart cart, User* curUser) {
 			string name;
 			cout << "What is the title of the book you wish to remove?\n";
 			std::getline(std::cin >> std::ws, name);
-			string message = cart.removeItem(name); //need to make the book class
+			string message = cart.removeItem(name); 
 			cout << message;
 			validSel = true;
 		}
@@ -183,6 +183,8 @@ void cartSelection(Cart cart, User* curUser) {
 			//curUser->addOrder(message);
 			cout << message;
 			validSel = true;
+			fstream fin;
+			fin.open("cart.csv", std::ofstream::out | std::ofstream::trunc);
 		}
 		else if (newSelection == 4) {
 			cout << "Headed back to main menu!\n";
