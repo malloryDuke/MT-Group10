@@ -2,6 +2,7 @@
 #define Cart_h
 #include <string>
 #include <iostream>
+#include <vector>
 using std::string;
 
 class Cart
@@ -15,5 +16,6 @@ public:
 	string removeItem(string book);
 	string viewCartItems();
 	string checkout();
+	string getISBN(string book);
 };
 
