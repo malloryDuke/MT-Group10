@@ -27,6 +27,7 @@ string Cart::addItem(string book, int num) {
 	string message = "Book added to cart!";
 	string isbn;
 	bool add = false;
+	int purchased = num;
 	while (fInventory >> temp) {
 		row.clear();
 		getline(fInventory, line);
@@ -44,7 +45,6 @@ string Cart::addItem(string book, int num) {
 		const auto strEnd = row[2].find_last_not_of(whitespace);
 		const auto strRange = strEnd - strBegin + 1;
 		string title = row[2].substr(strBegin, strRange);
-
 		if (book == title)
 		{
 			isbn = row[0];
@@ -52,10 +52,14 @@ string Cart::addItem(string book, int num) {
 			bool canAdd = num <= std::stoi(inStock);
 			if (!canAdd)
 			{
-				message = "We do not have " + std::to_string(num) + " of the book " + book + " in stock, but we added " + std::to_string(num - 1) + " to your cart.";
-				num = num - 1;
+				purchased = std::stoi(inStock);
+				message = "We do not have " + std::to_string(num) + " of the book " + book + " in stock, but we added " + std::to_string(purchased) + " to your cart.";
+			}
+			else {
+				message = "Book added to cart!";
 			}
 			add = true;
+			break;
 		}
 		else {
 			add = false;
@@ -71,7 +75,10 @@ string Cart::addItem(string book, int num) {
 		getline(finCart, line2);
 		count += 1;
 	}
-	foutCart << std::to_string(count) + ", " + isbn + ", " + book + ", " + std::to_string(num) + "\n";
+	if (add)
+	{
+		foutCart << std::to_string(count) + ", " + isbn + ", " + book + ", " + std::to_string(purchased) + "\n";
+	}
 	fInventory.close();
 	foutCart.close();
 	return message;
@@ -214,8 +221,45 @@ string Cart::checkout() {
 	}
 	items.append("\n");
 	fin.close();
-	//message = std::to_string(count) + " items purchased: " + items;
 	message = "Items purchased: " + items;
 	return message;
+}
+
+string Cart::getISBN(string book) {
+	fstream fInventory;
+	fInventory.open("inventory.csv", ios::in);
+	string line;
+	vector<string> row;
+	string temp;
+	string isbn;
+	while (fInventory >> temp) {
+		row.clear();
+		getline(fInventory, line);
+		cout << line + "\n";
+		stringstream ss(line);
+		string word;
+		char split = ',';
+		while (getline(ss, word, split))
+		{
+			row.push_back(word);
+			cout << word + "\n";
+		}
+		string whitespace = " \t";
+		const auto strBegin = row[2].find_first_not_of(whitespace);
+
+		const auto strEnd = row[2].find_last_not_of(whitespace);
+		const auto strRange = strEnd - strBegin + 1;
+		string title = row[2].substr(strBegin, strRange);
+
+		if (book == title)
+		{
+			isbn = row[0];
+		}
+		else {
+			isbn = "";
+		}
+	}
+	fInventory.close();
+	return isbn;
 }
 

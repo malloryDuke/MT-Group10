@@ -15,10 +15,8 @@ class Inventory
      public:
       void addInventory(Book book, int stock);
       bool removeInventory(Book book, int stock);
-      bool updateStock(int ISBN, int stock);
-      string viewInventory();
+      void updateStock(int ISBN, int stock);
+      void viewInventory();
       int getStock(int ISBN);
-
-
 };
 #endif // Inventory_H
