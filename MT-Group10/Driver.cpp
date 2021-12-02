@@ -136,11 +136,7 @@ void createCSVFiles() {
 	foutCart.open("cart.csv", std::ofstream::out | std::ofstream::trunc);
 	foutInventory.open("inventory.csv", std::ofstream::out | std::ofstream::trunc);
 	foutUsers.open("users.csv", ios::out | ios::app);
-	/*
-	foutCart << "1, 9780060194994, To Kill a Mockingbird, 2,\n";
-	foutCart << "2, 5000029999992, Bible, 3,\n";
-	foutUsers << "mallory duke malloryd, paSSw0rd, 1000 something lane Starkville MS 39759, 1010101010101010-10/11-999\n";
-	*/
+
 	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
 	foutInventory << "2, 8999999999999, Jesus, Bible, 5, $1.00,\n";
 	foutCart.close();
@@ -148,12 +144,14 @@ void createCSVFiles() {
 	foutUsers.close();
 }
 
-void inventorySelection(Cart cart, Inventory inventory) {
+void inventorySelection(Cart cart) {
+	string selection;
 	int newSelection;
 	int purchased = 0;
 	cout << "What would you like to do?\n\n";
-	cout << "1. Add book to cart\n2. Go back to main menu\n";
-	cin >> newSelection;
+	cout << "1. Add book to cart\n2. View inventory\n3. Go back to main menu\n";
+	getline(cin, selection);
+	newSelection = stoi(selection);
 	if (newSelection == 1)
 	{
 		// Display contents of inventory.csv
@@ -166,22 +164,32 @@ void inventorySelection(Cart cart, Inventory inventory) {
 		cout << "How many of " + book + " would you like to add to your cart?\n";
 		getline(cin, numIn);
 		num = stoi(numIn);
-		string message = cart.addItem(book, num);
+		string message;
+		for(int i = 0; i < num; i++){
+			message = cart.addItem(book, num);
+		}
 		cout << message;
 	}
-	else if (newSelection == 2)
+	else if(newSelection == 2) {
+		Inventory inventory;
+		inventory.viewInventory();
+	}
+	
+	else if (newSelection == 3)
 		return;
 	else {
 		cout << "Invalid selection";
 	}
 }
 
-void cartSelection(Cart cart, User* curUser, Inventory inventory) {
+void cartSelection(Cart cart,User* curUser) {
+	string selection;
 	int newSelection;
 	bool validSel = false;
 	cout << "What would you like to do?\n\n";
 	cout << "1. View items currently in cart\n2. Remove an item currently in cart\n3. Checkout\n4. Go back to main menu\n";
-	cin >> newSelection;
+	getline(cin, selection);
+	newSelection = stoi(selection);
 	while (!validSel)
 	{
 		if (newSelection == 1)
@@ -281,12 +289,14 @@ void accountSelection(User* curUser) {
 			case 1: //View Order History
 				
 				orderHistory = curUser->viewOrderHistory();
-				//cout << "Segfault" << endl;
-				cout << orderHistory[0] << endl;
-				for(int i = 1; i < (orderHistory.size() -1); i++){
-					cout <<  orderHistory[i];
+				if(orderHistory.empty()) cout <<"No Order History Found" << endl;
+				else{
+					cout << orderHistory[0] << endl;
+					for(int i = 1; i < (orderHistory.size() -1); i++){
+						cout <<  orderHistory[i];
+					}
+					cout << endl;
 				}
-				cout << endl;
 				break;
 			case 2: //Edit Shippping Info
 				cout << "Enter new Shipping Address: ";
@@ -307,6 +317,7 @@ void accountSelection(User* curUser) {
 				break;
 			default:
 				return;
+				
 		}
 	}
 	return;

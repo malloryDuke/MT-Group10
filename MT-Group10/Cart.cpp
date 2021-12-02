@@ -29,6 +29,7 @@ string Cart::addItem(string book, int num) {
 	bool add = false;
 	int purchased = num;
 	while (fInventory >> temp) {
+		
 		row.clear();
 		getline(fInventory, line);
 		stringstream ss(line);
@@ -61,11 +62,10 @@ string Cart::addItem(string book, int num) {
 			add = true;
 			break;
 		}
-		else {
-			add = false;
+	}
+	if(!add){
 			message = "We do not offer this book. If you believe we do, check your spelling and casing and try again";
 		}
-	}
 	string temp2;
 	vector<string> row2;
 	string line2;
