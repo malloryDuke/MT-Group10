@@ -267,7 +267,6 @@ vector<string> User::viewOrderHistory(){
                     if(i != (input.size() -1))
                         returnVal.push_back(",");
                 }
-                //returnVal.push_back(input[input.size() -1]);
             returnVal.push_back("\n");
             count++;
             }
