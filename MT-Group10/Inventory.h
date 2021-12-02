@@ -13,12 +13,10 @@ using namespace std;
 class Inventory
 {
      public:
-      void addInventory(Book book, int stock);
+      bool addInventory(Book book, int stock);
       bool removeInventory(Book book, int stock);
-      bool updateStock(int ISBN, int stock);
-      string viewInventory();
+      void updateStock(int ISBN, int stock);
+      void viewInventory(ostream& os);
       int getStock(int ISBN);
-
-
 };
 #endif // Inventory_H

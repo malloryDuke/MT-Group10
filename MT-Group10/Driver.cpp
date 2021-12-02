@@ -9,8 +9,8 @@
 
 using namespace std;
 void createCSVFiles();
-void inventorySelection(Cart cart);
-void cartSelection(Cart cart, User* curUser);
+void inventorySelection(Cart cart, Inventory inventory);
+void cartSelection(Cart cart, User* curUser, Inventory inventory);
 void accountSelection(User* curUser);
 
 int main()
@@ -27,6 +27,7 @@ int main()
 		{
 			bool validSelection = false;
 			Cart cart;
+			Inventory inventory;
 			while (!validSelection)
 			{
 				cout << "\nWhere would you like to go?\n\n";
@@ -38,13 +39,13 @@ int main()
 				{
 					//display available books in inventory.csv and allow user to add books to cart.csv
 					validSelection = true;
-					inventorySelection(cart);
+					inventorySelection(cart, inventory);
 				}
 				else if (select == 2)
 				{
 					//display books in cart.csv and allows user to remove items or checkout
 					validSelection = true;
-					cartSelection(cart, curUser);
+					cartSelection(cart, curUser, inventory);
 				}
 				else if (select == 3)
 				{
@@ -133,8 +134,11 @@ void createCSVFiles() {
 	fstream foutUsers;
 	fstream orderHistory; //Used to track order histories format should be username,order
 	foutCart.open("cart.csv", std::ofstream::out | std::ofstream::trunc);
-	foutInventory.open("inventory.csv", ios::out | ios::app);
+	foutInventory.open("inventory.csv", std::ofstream::out | std::ofstream::trunc);
 	foutUsers.open("users.csv", ios::out | ios::app);
+
+	foutInventory << "1, 9780060194994, Harper Lee, To Kill a Mockingbird, 4, $9.16,\n";
+	foutInventory << "2, 8999999999999, Jesus, Bible, 5, $1.00,\n";
 	foutCart.close();
 	foutInventory.close();
 	foutUsers.close();
@@ -143,12 +147,15 @@ void createCSVFiles() {
 void inventorySelection(Cart cart) {
 	string selection;
 	int newSelection;
+	int purchased = 0;
 	cout << "What would you like to do?\n\n";
 	cout << "1. Add book to cart\n2. View inventory\n3. Go back to main menu\n";
 	getline(cin, selection);
 	newSelection = stoi(selection);
 	if (newSelection == 1)
 	{
+		// Display contents of inventory.csv
+		inventory.viewInventory(cout);
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
 		getline(cin, book);
@@ -163,7 +170,6 @@ void inventorySelection(Cart cart) {
 			message = cart.addItem(book, num);
 		}
 		cout << message;
-		// call instance of cart to add the book to it
 	}
 	else if(newSelection == 2) {
 		Inventory inventory;
@@ -216,8 +222,44 @@ void cartSelection(Cart cart,User* curUser) {
 			curUser->addOrder(order);
 			cout << "Your items have been checked out!\n";
 			validSel = true;
+			fstream fCart;
+			fCart.open("cart.csv", ios::in);
+			string temp;
+			string line;
+			vector<string> row;
+			while (fCart >> temp)
+			{
+				row.clear();
+				getline(fCart, line);
+				stringstream ss(line);
+				string word;
+				char split2 = ',';
+				while (getline(ss, word, split2))
+				{
+					row.push_back(word);
+				}
+				string whitespace = " \t";
+				const auto strBegin = row[0].find_first_not_of(whitespace);
+
+				const auto strEnd = row[0].find_last_not_of(whitespace);
+				const auto strRange = strEnd - strBegin + 1;
+				string isbn = row[0].substr(strBegin, strRange);
+
+				string whitespace2 = " \t";
+				const auto strBegin2 = row[2].find_first_not_of(whitespace2);
+
+				const auto strEnd2 = row[2].find_last_not_of(whitespace2);
+				const auto strRange2 = strEnd2 - strBegin2 + 1;
+				string amount = row[2].substr(strBegin2, strRange2);
+				int purchased = std::stoi(amount);
+
+				inventory.updateStock(std::stoi(isbn), -purchased);
+			}
+
 			fstream fin;
 			fin.open("cart.csv", std::ofstream::out | std::ofstream::trunc);
+			fin.close();
+			
 		}
 		else if (newSelection == 4) {
 			cout << "Headed back to main menu!\n";
