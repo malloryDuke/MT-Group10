@@ -169,14 +169,17 @@ bool Inventory::removeInventory(Book book, int stock)
    return true;
 }
 
-bool Inventory::updateStock(int ISBN, int stock)
+void Inventory::updateStock(int ISBN, int stock)
 {
   Book tmp(ISBN, "tmp", "tmp", 69.99); 
-  if(stock < 0)
-     removeInventory(tmp, -stock);
-  else
-     addInventory(tmp, stock);
+  if (stock < 0) {
+    removeInventory(tmp, -stock);
+  }
+  else {
+    addInventory(tmp, stock);
+  }
 }
+
 
 void Inventory::viewInventory(ostream& os)
 {  
@@ -243,7 +246,7 @@ int Inventory::getStock(int ISBN)
       if(isbn == ISBN)
          return stoi(row[3]);
    }
-   return false;   
    fin.close();
+   return false;
 }
 
