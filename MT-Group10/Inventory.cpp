@@ -87,8 +87,8 @@ bool Inventory::addInventory(Book book, int stock)
 bool Inventory::removeInventory(Book book, int stock)
 {
    fstream fin, fout;
-   fin.open("Inventory.csv", ios::in);
-   fout.open("Inventorynew.csv", ios::out);
+   fin.open("inventory.csv", ios::in);
+   fout.open("inventorynew.csv", ios::out);
    
    vector <string> row;
    int count;
@@ -164,8 +164,8 @@ bool Inventory::removeInventory(Book book, int stock)
    }
    fin.close();
    fout.close();
-   remove("Inventory.csv");
-   rename("Inventorynew.csv", "Inventory.csv"); 
+   remove("inventory.csv");
+   rename("inventorynew.csv", "inventory.csv"); 
    return true;
 }
 
@@ -185,7 +185,7 @@ void Inventory::viewInventory(ostream& os)
 {  
    string output  = "";
    fstream fin;
-   fin.open("Inventory.csv", ios::in);
+   fin.open("inventory.csv", ios::in);
    
    int num = 1;
    vector <string> row;
@@ -223,7 +223,7 @@ void Inventory::viewInventory(ostream& os)
 int Inventory::getStock(int ISBN)
 {
    fstream fin;
-   fin.open("Inventory.csv", ios::in);
+   fin.open("inventory.csv", ios::in);
    
    vector <string> row;
    int count;
