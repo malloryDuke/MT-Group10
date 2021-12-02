@@ -227,15 +227,6 @@ void User::addOrder(string order){
     stringstream s(order);
     string word;
     orderHistory << username << "," << order;
-    /*
-    while(getline(s, word,','))
-    {
-        orderHistory << word;
-        if(word[word.size()-1] != '\n')
-            orderHistory << ",";
-    }
-    orderHistory << "\n";
-    */
 }
 
 
@@ -254,7 +245,7 @@ vector<string> User::viewOrderHistory(){
         while(getline(s,word,',')){
                 input.push_back(word);
             }
-        if(input[0] == username){
+        if(input[0] == username && !input.empty()){
             string tmp = "Order #";
             tmp += to_string(count);
             tmp += ": \n";

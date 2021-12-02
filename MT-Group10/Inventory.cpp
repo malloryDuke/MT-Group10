@@ -198,7 +198,7 @@ string Inventory::viewInventory()
 		}      
 
       int row_size = row.size();
-      long int isbn = stoi(row[0]);
+      //long int isbn = stoi(row[0]);
       
       cout << num << ".";
       num++;
