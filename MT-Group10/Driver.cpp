@@ -158,9 +158,10 @@ void inventorySelection(Cart cart) {
 		inventory.viewInventory(cout);
 		string book;
 		cout << "What is the title of the book you would like to add to the cart?\n";
-		std::getline(std::cin >> std::ws, book);
+		getline(cin, book);
 		string numIn;
-		int num;
+		numIn.clear();
+		int num = 0;
 		cout << "How many of " + book + " would you like to add to your cart?\n";
 		getline(cin, numIn);
 		num = stoi(numIn);
